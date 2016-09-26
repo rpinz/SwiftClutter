@@ -1,0 +1,12 @@
+import CGLib
+import CCairo
+import CPango
+import CCogl
+import CCoglPango
+import CClutter
+import GLib
+import GObject
+import Cairo
+import Pango
+import Cogl
+import CoglPango

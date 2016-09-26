@@ -1,0 +1,5 @@
+check_version
+get_option_group
+test_init
+test_run
+texture_error_quark

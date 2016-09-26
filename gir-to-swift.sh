@@ -21,7 +21,7 @@ if [ ! -e "${GIR}" ] ; then
 	echo "and can be found in /usr /usr/local or by pkg-config!"
 	exit 1
 fi
-gir2swift -p ${GIR_DIR}/GLib-2.0.gir -p ${GIR_DIR}/GObject-2.0.gir "${GIR}" | sed -f ${Module}.sed > Sources/${Module}.swift
+gir2swift -p ${GIR_DIR}/GLib-2.0.gir -p ${GIR_DIR}/GObject-2.0.gir -p ${GIR_DIR}/cairo-1.0.gir -p ${GIR_DIR}/Pango-1.0.gir -p ${GIR_DIR}/Cogl-1.0.gir -p ${GIR_DIR}/CoglPango-1.0.gir "${GIR}" | sed -f ${Module}.sed > Sources/${Module}.swift
 #echo  > Sources/Swift${Mod}.swift "import CGLib"
 #echo  > Sources/Swift${Mod}.swift "import CCairo"
 #echo >> Sources/Swift${Mod}.swift "import GLib"
