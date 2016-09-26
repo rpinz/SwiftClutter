@@ -25,6 +25,91 @@ public var argv: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = CommandLi
 public typealias ClutterAnimatable = _ClutterAnimatable
 public typealias ClutterParamSpecUnit = _ClutterParamSpecUnit
 
+/// Class that wraps a 3-parameter closure to make sure the closure
+/// is retained until no longer required
+public class ThreeParameterClosureHolder<S, T, U, V> {
+    
+    public let call: (S, T, U) -> V
+
+    public init(_ closure: @escaping (S, T, U) -> V) {
+        self.call = closure
+    }
+}
+
+/// Signal handler for timeline signals.
+public typealias TimelineSignalHandler = (TimelineRef, Int, UnsafeMutableRawPointer?) -> Void
+
+/// Internal type used for holding a Timeline signal handling closure
+typealias TimelineSignalHandlerClosureHolder = ThreeParameterClosureHolder<TimelineRef,Int,UnsafeMutableRawPointer?,Void>
+
+public extension TimelineProtocol {
+    /// Connection helper function
+    private func _connect(signal name: UnsafePointer<gchar>, flags: ConnectFlags, data: TimelineSignalHandlerClosureHolder, handler: @convention(c) (gpointer, gpointer, gpointer) -> gboolean) -> CUnsignedLong {
+        let opaqueHolder = Unmanaged.passRetained(data).toOpaque()
+        let callback = unsafeBitCast(handler, to: GObject.Callback.self)
+        let rv = signalConnectData(detailedSignal: name, cHandler: callback, data: opaqueHolder, destroyData: {
+            if let swift = $0 {
+                let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque(swift)
+                holder.release()
+            }
+            let _ = $1
+            }, connectFlags: flags)
+        return rv
+    }
+    
+    /// Connects a (Timeline,Int,UnsafeMutableRawPointer?) -> Void closure or function to a signal for
+    /// the receiver object.  Similar to g_signal_connect(), but allows
+    /// to provide a Swift closure that can capture its surrounding context.
+    @discardableResult
+    public func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+        let rv = _connect(signal: name, flags: f, data: TimelineSignalHandlerClosureHolder(handler)) {
+            let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
+            let frame = unsafeBitCast($1, to: Int.self)
+            holder.call(TimelineRef(raw: $0), frame, $2)
+            return 0
+        }
+        return rv
+    }
+    
+    /// Connects a (Timeline,Int,UnsafeMutableRawPointer?) -> Void closure or function to a signal for
+    /// the receiver object.  Similar to g_signal_connect(), but allows
+    /// to provide a Swift closure that can capture its surrounding context.
+    @discardableResult
+    public func connectTimelineSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+        let rv = _connect(signal: name, flags: f, data: TimelineSignalHandlerClosureHolder(handler)) {
+            let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
+            let frame = unsafeBitCast($1, to: Int.self)
+            holder.call(TimelineRef(raw: $0), frame, $2)
+            return 0
+        }
+        return rv
+    }
+    
+    /// Connects a (Timeline,Int,UnsafeMutableRawPointer?)) -> Void closure or function to a Timeline signal for
+    /// the receiver object.  Similar to g_signal_connect(), but allows
+    /// to provide a Swift closure that can capture its surrounding context.
+    @discardableResult
+    public func connect<T>(signal s: T, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong where T: SignalNameProtocol {
+        return connectTimelineSignal(name: s.rawValue, flags: f, handler: handler)
+    }
+    
+    /// Connects a (Timeline,Int,UnsafeMutableRawPointer?) -> Bool closure or function to a Timeline signal for
+    /// the receiver object.  Similar to g_signal_connect(), but allows
+    /// to provide a Swift closure that can capture its surrounding context.
+    @discardableResult
+    public func connect(signal: TimelineSignalName, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+        return connectTimelineSignal(name: signal.rawValue, flags: f, handler: handler)
+    }
+    
+    /// Connects a (Timeline,Int,UnsafeMutableRawPointer?) -> Bool closure or function to the "new-frame"
+    /// signal of the receiver object.  Similar to g_signal_connect(), but allows
+    /// to provide a Swift closure that can capture its surrounding context.
+    @discardableResult
+    public func onNewFrame(flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+        return connectTimelineSignal(name: TimelineSignalName.newFrame.rawValue, flags: f, handler: handler)
+    }
+}
+
 public extension ActorProtocol {
     /// Dimensions of the actor.
     var size: (width: Double, height: Double) {
