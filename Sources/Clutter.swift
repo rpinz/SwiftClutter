@@ -10,13 +10,60 @@ import CClutter
 import GLib
 import GObject
 
-func cast(_ f: @convention(c) (UnsafeMutablePointer<GObject>?, UnsafePointer<gchar>?, guint, ClutterModifierType, gpointer?) -> gboolean) -> GCallback {
-    return unsafeBitCast(f, to: GCallback.self)
-}
+/// Command line argument count as used by Clutter
+public var argc = CommandLine.argc
 
+/// Command line argument vector as used by Clutter
+public var argv: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>? = CommandLine.unsafeArgv
+
+/// Initialisation function for Clutter.
+/// Must be called before any other function gets called!
+@discardableResult public func initialize() -> InitError {
+    return clutter_init(&argc, &argv)
+}
 
 public typealias ClutterAnimatable = _ClutterAnimatable
 public typealias ClutterParamSpecUnit = _ClutterParamSpecUnit
+
+public extension ActorProtocol {
+    /// Dimensions of the actor.
+    var size: (width: Double, height: Double) {
+        get {
+            var w = gfloat(0)
+            var h = gfloat(0)
+            getSize(width: &w, height: &h)
+            return (Double(w), Double(h))
+        }
+        set {
+            setSize(width: gfloat(newValue.width), height: gfloat(newValue.height))
+        }
+    }
+
+    /// Position of the actor.
+    var position: (x: Double, y: Double) {
+        get {
+            var x = gfloat(0)
+            var y = gfloat(0)
+            getPosition(x: &x, y: &y)
+            return (Double(x), Double(y))
+        }
+        set {
+            setPosition(x: gfloat(newValue.x), y: gfloat(newValue.y))
+        }
+    }
+
+    /// Background colour of the actor.
+    var backgroundColor: Color {
+        get {
+            let c = Color(red: 0, green: 0, blue: 0, alpha: 0)
+            getBackground(color: c)
+            return c
+        }
+        set { setBackground(color: newValue) }
+    }
+
+}
+
 
 public protocol MatrixProtocol {
     var ptr: UnsafeMutablePointer<ClutterMatrix> { get }
@@ -88,6 +135,11 @@ open class MatrixClass: MatrixProtocol {
     public convenience init(opaquePointer: OpaquePointer) {
         self.init(UnsafeMutablePointer<ClutterMatrix>(opaquePointer))
     }
+}
+
+
+func cast(_ f: @convention(c) (UnsafeMutablePointer<GObject>?, UnsafePointer<gchar>?, guint, ClutterModifierType, gpointer?) -> gboolean) -> GCallback {
+    return unsafeBitCast(f, to: GCallback.self)
 }
 
 

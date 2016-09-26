@@ -13,6 +13,10 @@ s/rv.map { Fixed(cast($0)) }/rv/
 s/cast(minimum.ptr)/minimum/
 s/cast(maximum.ptr)/maximum/
 s/cast(fixed_.ptr)/fixed_/
+s/(x_:/(x x_:/
+s/(y_:/(y y_:/
+s/, x_:/, x x_:/
+s/, y_:/, y y_:/
 s/clutter_param_spec_fixed(name, nick, blurb, minimum, maximum, cast(default_value.ptr), flags)/clutter_param_spec_fixed(name, nick, blurb, minimum, maximum, default_value, flags)/
 s/clutter_binding_pool_install_action(cast(ptr), action_name, guint(key_val), modifiers, callback, cast(data), notify)/clutter_binding_pool_install_action(cast(ptr), action_name, guint(key_val), modifiers, cast(callback), cast(data), notify)/
 s/\(public func clutter_behaviour_ellipse_get_angle_end\)/@available(*, deprecated) \1/
