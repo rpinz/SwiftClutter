@@ -19,30 +19,32 @@ s/, x_:/, x x_:/
 s/, y_:/, y y_:/
 s/clutter_param_spec_fixed(name, nick, blurb, minimum, maximum, cast(default_value.ptr), flags)/clutter_param_spec_fixed(name, nick, blurb, minimum, maximum, default_value, flags)/
 s/clutter_binding_pool_install_action(cast(ptr), action_name, guint(key_val), modifiers, callback, cast(data), notify)/clutter_binding_pool_install_action(cast(ptr), action_name, guint(key_val), modifiers, cast(callback), cast(data), notify)/
-s/\(public func clutter_behaviour_ellipse_get_angle_end\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_angle_start\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_angle_tilt\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_center\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_direction\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_height\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_tilt\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_get_width\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_new\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_angle_end\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_angle_start\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_angle_tilt\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_center\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_direction\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_height\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_tilt\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_ellipse_set_width\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_get_axis\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_get_bounds\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_get_center\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_get_direction\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_new\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_set_axis\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_set_bounds\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_set_center\)/@available(*, deprecated) \1/
-s/\(public func clutter_behaviour_rotate_set_direction\)/@available(*, deprecated) \1/
-s/\(public func clutter_shader_error_quark\)/@available(*, deprecated) \1/
+s/\(public func getAngleEnd\)/@available(*, deprecated) \1/
+s/\(public var angleEnd:\)/@available(*, deprecated) \1/
+s/\(public func getAngleStart\)/@available(*, deprecated) \1/
+s/\(public var angleStart:\)/@available(*, deprecated) \1/
+s/\(public func getAngleTilt\)/@available(*, deprecated) \1/
+s/\(public func getCenter.x \)/@available(*, deprecated) \1/
+s/\(public func getDirection.. -> ClutterRotateDirection\)/@available(*, deprecated) \1/
+s/\(public var direction: ClutterRotateDirectio\)/@available(*, deprecated) \1/
+s/\(public func getHeight.. -> CInt\)/@available(*, deprecated) \1/
+s/\(public var height: CInt\)/@available(*, deprecated) \1/
+s/\(public func getTilt\)/@available(*, deprecated) \1/
+s/\(public func getWidth.. -> CInt\)/@available(*, deprecated) \1/
+s/\(public var width: CInt\)/@available(*, deprecated) \1/
+s/\(public.* init. alpha: AlphaProtocol, x x_: CInt, y y_: CInt, width: CInt, height: CInt, direction: RotateDirection, start: gdouble, end: gdouble.\)/@available(*, deprecated) \1/
+s/\(public func set.angleEnd\)/@available(*, deprecated) \1/
+s/\(public func set.angleStart\)/@available(*, deprecated) \1/
+s/\(public func setAngleTilt.axis:\)/@available(*, deprecated) \1/
+s/\(public func setCenter.x\)/@available(*, deprecated) \1/
+s/\(public func set.direction: RotateDirection\)/@available(*, deprecated) \1/
+s/\(public func set.height: CInt\)/@available(*, deprecated) \1/
+s/\(public func setTilt.angleTiltX\)/@available(*, deprecated) \1/
+s/\(public func set.width: CInt\)/@available(*, deprecated) \1/
+s/\(public func getAxis.. -> ClutterRotateAxis\)/@available(*, deprecated) \1/
+s/\(public var axis: ClutterRotateAxis\)/@available(*, deprecated) \1/
+s/\(public func getBounds.angleStart angle_start:\)/@available(*, deprecated) \1/
+s/\(public.* init. alpha: AlphaProtocol, axis: RotateAxis, direction: RotateDirection, angleStart angle_start: gdouble, angleEnd angle_end: gdouble.\)/@available(*, deprecated) \1/
+s/\(public func set.axis: RotateAxis\)/@available(*, deprecated) \1/
+s/\(public func setBounds.angleStart\)/@available(*, deprecated) \1/
+s/\(public func shaderErrorQuark\)/@available(*, deprecated) \1/
