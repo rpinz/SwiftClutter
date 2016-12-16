@@ -238,7 +238,7 @@ public extension MatrixRef {
     }
     
     public init<T>(constPointer: UnsafePointer<T>) {
-        ptr = constPointer.withMemoryRebound(to: ClutterMatrix.self, capacity: 1) { $0 }
+        ptr = constPointer.withMemoryRebound(to: ClutterMatrix.self, capacity: 1) { UnsafeMutablePointer(mutating: $0) }
     }
     
     public init(raw: UnsafeRawPointer) {
