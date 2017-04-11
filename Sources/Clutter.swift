@@ -8,7 +8,7 @@
 import CGLib
 import CClutter
 import GLib
-import GObject
+import GLibObject
 
 /// Command line argument count as used by Clutter
 public var argc = CommandLine.argc
@@ -50,9 +50,9 @@ typealias TimelineSignalHandlerClosureHolder = ThreeParameterClosureHolder<Timel
 
 public extension TimelineProtocol {
     /// Connection helper function
-    private func _connect(signal name: UnsafePointer<gchar>, flags: ConnectFlags, data: TimelineSignalHandlerClosureHolder, handler: @convention(c) (gpointer, gpointer, gpointer) -> gboolean) -> CUnsignedLong {
+    private func _connect(signal name: UnsafePointer<gchar>, flags: ConnectFlags, data: TimelineSignalHandlerClosureHolder, handler: @convention(c) @escaping (gpointer, gpointer, gpointer) -> gboolean) -> CUnsignedLong {
         let opaqueHolder = Unmanaged.passRetained(data).toOpaque()
-        let callback = unsafeBitCast(handler, to: GObject.Callback.self)
+        let callback = unsafeBitCast(handler, to: GLibObject.Callback.self)
         let rv = signalConnectData(detailedSignal: name, cHandler: callback, data: opaqueHolder, destroyData: {
             if let swift = $0 {
                 let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque(swift)
@@ -70,7 +70,7 @@ public extension TimelineProtocol {
     public func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: TimelineSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
-            let frame = unsafeBitCast($1, to: Int.self)
+            let frame = Int(bitPattern: $1)
             holder.call(TimelineRef(raw: $0), frame, $2)
             return 0
         }
@@ -84,7 +84,7 @@ public extension TimelineProtocol {
     public func connectTimelineSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: TimelineSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
-            let frame = unsafeBitCast($1, to: Int.self)
+            let frame = Int(bitPattern: $1)
             holder.call(TimelineRef(raw: $0), frame, $2)
             return 0
         }
@@ -118,9 +118,9 @@ public extension TimelineProtocol {
 
 public extension StageProtocol {
     /// Connection helper function
-    private func _connect(signal name: UnsafePointer<gchar>, flags: ConnectFlags, data: EventSignalHandlerClosureHolder, handler: @convention(c) (gpointer, gpointer, gpointer) -> gboolean) -> CUnsignedLong {
+    private func _connect(signal name: UnsafePointer<gchar>, flags: ConnectFlags, data: EventSignalHandlerClosureHolder, handler: @convention(c) @escaping (gpointer, gpointer, gpointer) -> gboolean) -> CUnsignedLong {
         let opaqueHolder = Unmanaged.passRetained(data).toOpaque()
-        let callback = unsafeBitCast(handler, to: GObject.Callback.self)
+        let callback = unsafeBitCast(handler, to: GLibObject.Callback.self)
         let rv = signalConnectData(detailedSignal: name, cHandler: callback, data: opaqueHolder, destroyData: {
             if let swift = $0 {
                 let holder = Unmanaged<EventSignalHandlerClosureHolder>.fromOpaque(swift)
@@ -138,7 +138,7 @@ public extension StageProtocol {
     public func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: EventSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<EventSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
-            let event = unsafeBitCast($1, to: UnsafeMutablePointer<ClutterEvent>.self)
+            let event = $1.assumingMemoryBound(to: ClutterEvent.self)
             holder.call(StageRef(raw: $0), event, $2)
             return 0
         }
@@ -152,7 +152,7 @@ public extension StageProtocol {
     public func connectEventSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: EventSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<EventSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
-            let event = unsafeBitCast($1, to: UnsafeMutablePointer<ClutterEvent>.self)
+            let event = $1.assumingMemoryBound(to: ClutterEvent.self)
             holder.call(StageRef(raw: $0), event, $2)
             return 0
         }
@@ -289,7 +289,7 @@ open class MatrixClass: MatrixProtocol {
 }
 
 
-func cast(_ f: @convention(c) (UnsafeMutablePointer<GObject>?, UnsafePointer<gchar>?, guint, ClutterModifierType, gpointer?) -> gboolean) -> GCallback {
+func cast(_ f: @convention(c) @escaping (UnsafeMutablePointer<GObject>?, UnsafePointer<gchar>?, guint, ClutterModifierType, gpointer?) -> gboolean) -> GCallback {
     return unsafeBitCast(f, to: GCallback.self)
 }
 

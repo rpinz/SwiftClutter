@@ -5,7 +5,7 @@ import CCogl
 import CCoglPango
 import CClutter
 import GLib
-import GObject
+import GLibObject
 import Cairo
 import Pango
 import Cogl

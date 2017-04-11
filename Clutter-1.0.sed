@@ -48,3 +48,5 @@ s/\(public.* init. alpha: AlphaProtocol, axis: RotateAxis, direction: RotateDire
 s/\(public func set.axis: RotateAxis\)/@available(*, deprecated) \1/
 s/\(public func setBounds.angleStart\)/@available(*, deprecated) \1/
 s/\(public func shaderErrorQuark\)/@available(*, deprecated) \1/
+s/GObject.Callback/GLibObject.Callback/g
+s/GObject.ParamFlags/GLibObject.ParamFlags/g
