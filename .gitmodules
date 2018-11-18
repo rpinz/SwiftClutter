@@ -1,0 +1,3 @@
+[submodule "Library/CClutter"]
+	path = Library/CClutter
+	url = https://github.com/rpinz/CClutter
