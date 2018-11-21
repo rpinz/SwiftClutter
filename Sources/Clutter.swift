@@ -67,7 +67,7 @@ public extension TimelineProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+    func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: TimelineSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
             let frame = Int(bitPattern: $1)
@@ -81,7 +81,7 @@ public extension TimelineProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connectTimelineSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+    func connectTimelineSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: TimelineSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<TimelineSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
             let frame = Int(bitPattern: $1)
@@ -95,7 +95,7 @@ public extension TimelineProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connect<T>(signal s: T, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong where T: SignalNameProtocol {
+    func connect<T>(signal s: T, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong where T: SignalNameProtocol {
         return connectTimelineSignal(name: s.rawValue, flags: f, handler: handler)
     }
     
@@ -103,7 +103,7 @@ public extension TimelineProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connect(signal: TimelineSignalName, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+    func connect(signal: TimelineSignalName, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
         return connectTimelineSignal(name: signal.rawValue, flags: f, handler: handler)
     }
     
@@ -111,7 +111,7 @@ public extension TimelineProtocol {
     /// signal of the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func onNewFrame(flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
+    func onNewFrame(flags f: ConnectFlags = ConnectFlags(0), handler: @escaping TimelineSignalHandler) -> CUnsignedLong {
         return connectTimelineSignal(name: TimelineSignalName.newFrame.rawValue, flags: f, handler: handler)
     }
 }
@@ -135,7 +135,7 @@ public extension StageProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
+    func connectSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: EventSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<EventSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
             let event = $1.assumingMemoryBound(to: ClutterEvent.self)
@@ -149,7 +149,7 @@ public extension StageProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connectEventSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
+    func connectEventSignal(name: UnsafePointer<gchar>, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
         let rv = _connect(signal: name, flags: f, data: EventSignalHandlerClosureHolder(handler)) {
             let holder = Unmanaged<EventSignalHandlerClosureHolder>.fromOpaque($2).takeUnretainedValue()
             let event = $1.assumingMemoryBound(to: ClutterEvent.self)
@@ -163,7 +163,7 @@ public extension StageProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connect<T>(signal s: T, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong where T: SignalNameProtocol {
+    func connect<T>(signal s: T, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong where T: SignalNameProtocol {
         return connectEventSignal(name: s.rawValue, flags: f, handler: handler)
     }
     
@@ -171,7 +171,7 @@ public extension StageProtocol {
     /// the receiver object.  Similar to g_signal_connect(), but allows
     /// to provide a Swift closure that can capture its surrounding context.
     @discardableResult
-    public func connect(event: ActorSignalName, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
+    func connect(event: ActorSignalName, flags f: ConnectFlags = ConnectFlags(0), handler: @escaping EventSignalHandler) -> CUnsignedLong {
         return connectEventSignal(name: event.rawValue, flags: f, handler: handler)
     }
 }
@@ -225,31 +225,31 @@ public struct MatrixRef: MatrixProtocol {
 }
 
 public extension MatrixRef {
-    public init(_ p: UnsafeMutablePointer<ClutterMatrix>) {
+    init(_ p: UnsafeMutablePointer<ClutterMatrix>) {
         ptr = p
     }
     
-    public init<T: MatrixProtocol>(_ other: T) {
+    init<T: MatrixProtocol>(_ other: T) {
         ptr = other.ptr
     }
     
-    public init<T>(cPointer: UnsafeMutablePointer<T>) {
+    init<T>(cPointer: UnsafeMutablePointer<T>) {
         ptr = cPointer.withMemoryRebound(to: ClutterMatrix.self, capacity: 1) { $0 }
     }
     
-    public init<T>(constPointer: UnsafePointer<T>) {
+    init<T>(constPointer: UnsafePointer<T>) {
         ptr = constPointer.withMemoryRebound(to: ClutterMatrix.self, capacity: 1) { UnsafeMutablePointer(mutating: $0) }
     }
     
-    public init(raw: UnsafeRawPointer) {
+    init(raw: UnsafeRawPointer) {
         ptr = UnsafeMutableRawPointer(mutating: raw).assumingMemoryBound(to: ClutterMatrix.self)
     }
     
-    public init(raw: UnsafeMutableRawPointer) {
+    init(raw: UnsafeMutableRawPointer) {
         ptr = raw.assumingMemoryBound(to: ClutterMatrix.self)
     }
     
-    public init(opaquePointer: OpaquePointer) {
+    init(opaquePointer: OpaquePointer) {
         ptr = UnsafeMutablePointer<ClutterMatrix>(opaquePointer)
     }
     
